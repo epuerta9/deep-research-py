@@ -5,22 +5,24 @@ import json
 from .prompt import system_prompt
 from .common.logging import log_error, log_event
 from .ai.providers import generate_completions
-from deep_research_py.utils import get_service
+from deep_research_py.utils import ModelConfig
 from pydantic import BaseModel
+
 
 class FeedbackResponse(BaseModel):
     questions: List[str]
 
 
 async def generate_feedback(
-    query: str, client: Optional[openai.OpenAI | ollama.Client], model: str, max_feedbacks: int = 5
+    query: str,
+    client: Optional[openai.OpenAI | ollama.Client],
+    model: str,
+    max_feedbacks: int = 5,
 ) -> List[str]:
     """Generates follow-up questions to clarify research direction."""
 
-    prompt = (
-        f"Given this research topic: {query}, generate at most {max_feedbacks} follow-up questions to better understand the user's research needs, but feel free to return none questions if the original query is clear. Return the response as a JSON object with a 'questions' array field."
-    )
-    
+    prompt = f"Given this research topic: {query}, generate at most {max_feedbacks} follow-up questions to better understand the user's research needs, but feel free to return none questions if the original query is clear. Return the response as a JSON object with a 'questions' array field."
+
     response = await generate_completions(
         client=client,
         model=model,
@@ -36,7 +38,7 @@ async def generate_feedback(
 
     # Parse the JSON response
     try:
-        if get_service() == "ollama":
+        if ModelConfig.get_service() == "ollama":
             result = json.loads(response.message.content)
         else:
             # OpenAI compatible API

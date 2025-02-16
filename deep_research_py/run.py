@@ -11,7 +11,7 @@ from deep_research_py.deep_research import deep_research, write_final_report
 from deep_research_py.feedback import generate_feedback
 from deep_research_py.ai.providers import get_ai_client
 
-from deep_research_py.utils import console, set_service, set_model
+from deep_research_py.utils import ModelConfig
 
 load_dotenv()
 app = typer.Typer()
@@ -58,10 +58,11 @@ async def main(
         default=False,
         help="Log to stdout.",
     ),
-):  
-    set_service(service.lower())
-    set_model(model)
-    
+):
+    ModelConfig.set_service(service.lower())
+    ModelConfig.set_model(model)
+    console = ModelConfig.console
+
     """Initialize the Logger"""
     if enable_logging:
         from deep_research_py.common.logging import initial_logger

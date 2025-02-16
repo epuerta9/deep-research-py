@@ -1,21 +1,23 @@
 from rich.console import Console
-    
-console = Console()
-service = "openai"
-model = "o3-mini"
 
-def get_service() -> str:
-  global service
-  return service
 
-def set_service(new_service: str) -> None:
-  global service
-  service = new_service
-  
-def get_model() -> str:
-  global model
-  return model
+class ModelConfig:
+    console = Console()
+    service = "openai"
+    model = "o3-mini"
 
-def set_model(new_model: str) -> None:
-  global model
-  model = new_model
+    @classmethod
+    def get_service(cls) -> str:
+        return cls.service
+
+    @classmethod
+    def set_service(cls, new_service: str) -> None:
+        cls.service = new_service
+
+    @classmethod
+    def get_model(cls) -> str:
+        return cls.model
+
+    @classmethod
+    def set_model(cls, new_model: str) -> None:
+        cls.model = new_model
